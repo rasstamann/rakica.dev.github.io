@@ -25,8 +25,9 @@ Thumbs.db
 # MongoDB data (if ever run locally outside Docker)
 data/
 
-# Local CV reference file (contains personal info — never commit)
+# Local reference files (contain personal info — never commit)
 docs/cv-data.md
+docs/ideas/
 *.pdf
 
 # Planning files — never commit unless explicitly told to
