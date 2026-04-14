@@ -89,5 +89,5 @@ jobs:
             cd /var/www/personal_presentation
             git pull origin main
             cd client && bun install --frozen-lockfile && bun run build && cd ..
-            cd server && bun install --frozen-lockfile && cd ..
+            cd server && bun install --frozen-lockfile && bun run seed && cd ..
             pm2 restart personal-presentation
