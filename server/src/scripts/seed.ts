@@ -6,8 +6,8 @@ import Project from '../models/Project';
 const seedData = {
   name: 'Aleksandar Rakić',
   tagline: {
-    en: 'C++ developer, Lego enjoyer, cook, husband, dad and sometimes asleep',
-    de: 'C++ Entwickler, Lego-Enthusiast, Koch, Ehemann, Papa und manchmal am Schlafen',
+    en: 'Engineer, C++ developer, Lego enjoyer, cook, husband, dad and sometimes asleep',
+    de: 'Ingenieur, C++ Entwickler, Lego-Enthusiast, Koch, Ehemann, Papa und manchmal am Schlafen',
   },
   summary: {
     en: 'Experienced software engineer with 3 years of experience in C++, Qt, and Embedded Linux. I am used to analyzing problems in detail and carefully developing and testing robust solutions. I place great importance on knowledge transfer and transparency at work: detailed documentation and peer reviews are a must for me. I enjoy refining details while always keeping the big picture in mind.',
