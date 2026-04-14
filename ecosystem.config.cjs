@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'personal-presentation',
       script: 'src/index.ts',
-      interpreter: '/usr/local/bin/bun',
+      interpreter: '/home/deployer/.bun/bin/bun',
       cwd: '/var/www/personal_presentation/server',
       instances: 1,
       autorestart: true,
