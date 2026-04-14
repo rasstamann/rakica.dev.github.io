@@ -6,6 +6,7 @@ module.exports = {
       interpreter: '/home/deployer/.bun/bin/bun',
       cwd: '/var/www/personal_presentation/server',
       instances: 1,
+      exec_mode: 'fork',
       autorestart: true,
       watch: false,
       max_memory_restart: '256M',
