@@ -26,7 +26,7 @@ const seedData = {
     'Software Architecture', 'Design Patterns', 'UML',
     'User Interface',
     'Git', 'Gitea', 'Eclipse', 'Visual Studio Code',
-    'Claude', 'Agentic Programming',
+    'Claude', 'Agentic Programming', 'CI/CD',
   ],
   experience: [
     {
