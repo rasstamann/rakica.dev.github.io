@@ -87,6 +87,7 @@ This applies equally to the seed file and to any direct database operation. When
 ## Workflow
 
 - Run `bun run build` (client) and check for TypeScript errors after changes
+- Run `bun test` in both `client/` and `server/` before every push to main — all tests must pass
 - Do not auto-commit; propose to the user first
 - Work on `main`; no feature branches unless requested
 - Use the spec as the single source of truth for data shapes and API contracts

@@ -77,7 +77,8 @@ personal_presentation/
 │       ├── App.tsx                  # Router root; owns profile state for /
 │       ├── types.ts                 # Shared Profile + Project types
 │       ├── pages/
-│       │   ├── HomePage.tsx         # Existing landing page content
+│       │   ├── HomePage.tsx         # Landing page: Hero + Links only
+│       │   ├── AboutPage.tsx        # CV page: Summary, Skills, Experience, Education
 │       │   └── ProjectsPage.tsx     # Fetches /api/projects, maps to ProjectCard
 │       └── components/
 │           ├── Hero.tsx             # Name + tagline
@@ -95,7 +96,8 @@ personal_presentation/
     └── src/
         ├── index.ts                 # Entry: connect DB, register middleware, start server
         ├── lib/
-        │   └── db.ts                # Mongoose connect helper
+        │   ├── db.ts                # Mongoose connect helper
+        │   └── middleware.ts        # requireDb — returns 503 when DB unavailable
         ├── models/
         │   ├── Profile.ts           # Mongoose model + TypeScript type
         │   └── Project.ts           # Mongoose model + TypeScript type
@@ -112,19 +114,12 @@ personal_presentation/
 
 ### 5.1 Landing Page (`/`)
 
-Displays, in order:
-1. Name (heading)
+Displays only:
+1. Name + avatar (heading)
 2. Tagline (subheading)
-3. Brief summary / "About me" paragraph
-4. Social/contact links — GitHub, LinkedIn, email (only renders fields with values)
-5. Skills list — horizontal tag list
-6. Experience — timeline of work history (company, role, dates, bullet points)
-7. Education — degrees and courses
+3. Social/contact links — GitHub, LinkedIn, email
 
-All content is fetched from `GET /api/me?lang=<locale>` on mount. Locale is detected from `navigator.language` (`de-*` → `de`, all others → `en`). The page shows:
-- **Loading state** while the request is in-flight
-- **Error state** if the request fails (message: "Could not load profile")
-- **Content** once data resolves
+All content is fetched from `GET /api/me?lang=<locale>` on mount. On fetch failure, hardcoded fallback data is shown (name, tagline, links). The page never shows an error message.
 
 ### 5.2 API
 
@@ -186,7 +181,7 @@ Displays a list of project cards fetched from `GET /api/projects?lang=<locale>`.
 
 Shows:
 - **Loading state** while in-flight
-- **Error state** on failure ("Could not load projects")
+- **Error state** → shows hardcoded fallback project card (personal-presentation) instead of an error message
 - **Card list** once resolved — one `<ProjectCard>` per project
 
 Each card renders:
@@ -200,7 +195,17 @@ Each card renders:
 
 Navigation between `/` and `/projects` via sticky header links (existing `StickyHeader` component updated to include "Projects" link).
 
-### 5.4 Seed Script (`bun run seed`)
+### 5.4 About Page (`/about`)
+
+Displays CV content:
+1. Summary / "About me" paragraph
+2. Skills — grouped by category
+3. Experience — timeline with bullets
+4. Education — degrees and courses
+
+Fetched from `GET /api/me?lang=<locale>`. On failure, shows hardcoded fallback: current job (grapho-metronic) and BSc (University of Belgrade) only. Summary and skills are hidden when falling back.
+
+### 5.5 Seed Script (`bun run seed`)
 
 Connects to MongoDB, upserts the placeholder profile document and all project documents (creates if absent, updates if present), logs the result, and exits with code 0.
 
@@ -218,8 +223,10 @@ Connects to MongoDB, upserts the placeholder profile document and all project do
 - All secrets in environment variables — never committed
 
 **Reliability**
-- Graceful error handling: DB connection failure logs clearly and exits with code 1
-- Frontend renders an error state rather than crashing on failed fetch
+- Graceful error handling: server starts regardless of DB state. If MongoDB is unavailable at startup, a warning is logged. API routes return 503 immediately (via `requireDb` middleware) rather than hanging. DB connection is retried by Mongoose in the background.
+
+**UX (resilience)**
+- All pages show meaningful fallback content when the API is unavailable — no blank screens or raw error messages visible to end users.
 
 **Maintainability**
 - TypeScript everywhere — `strict: true`, no `any`
@@ -380,23 +387,36 @@ CORS headers set by `cors` middleware using `ALLOWED_ORIGIN` env var.
 
 ### `App.tsx`
 - Detects locale from `navigator.language` (`de-*` → `de`, all others → `en`); lifted to `useState`
-- Wraps all routes in `<BrowserRouter>`
-- Renders `<Route path="/" element={<HomePage locale={locale} />}>`
-- Renders `<Route path="/projects" element={<ProjectsPage locale={locale} />}>`
-- Passes `locale` and `setLocale` down to `StickyHeader` for the locale switcher
+- Sidebars: two decorative gradient bars (`w-[3%]`, always visible) — green left, violet right
+- `StickyHeader` always rendered; `heroInView` boolean passed as prop to control avatar fade-in animation
+- Routes: `/`, `/about`, `/projects`
+- `basename` set from `import.meta.env.BASE_URL` for correct routing on GitHub Pages
 
 ### `pages/HomePage.tsx`
-- Extracted from existing `App.tsx` content
 - Fetches `/api/me?lang=<locale>` on mount via AbortController
-- Manages `profile`, `loading`, `error` state
-- Renders `<Hero>`, `<Summary>`, `<Links>`, `<Skills>`, `<Experience>`, `<Education>` once loaded
+- Renders `<Hero>` and `<Links>` only
+- On fetch failure: shows hardcoded fallback (name, taglines EN/DE, links) — never shows error state
+- Fires `onHeroVisibilityChange` via IntersectionObserver on Hero element
+
+### `pages/AboutPage.tsx`
+- Fetches `/api/me?lang=<locale>` on mount
+- Renders `<Summary>`, `<Skills>`, `<Experience>`, `<Education>` when data loads
+- On failure: shows hardcoded fallback experience (current job) and education (BSc); summary and skills hidden
+- No Hero, no Links
 
 ### `pages/ProjectsPage.tsx`
 - Receives `locale` prop
 - Fetches `/api/projects?lang=<locale>` on mount via AbortController; re-fetches when `locale` changes
-- Manages `projects`, `loading`, `error` state
-- Shows loading / error states matching landing page pattern
+- Manages `projects`, `loading` state
+- On failure: shows hardcoded fallback project card (personal-presentation) — no error message rendered
 - Maps projects to `<ProjectCard>` components
+
+### `components/StickyHeader.tsx`
+- Always visible (no full-bar slide animation)
+- Positioned between sidebars: `left-[3%] right-[3%]`
+- Left: avatar (fades in when `heroInView=false`, links to `/`) + nav links (Home, About, Projects — always visible)
+- Right: `<LocaleSwitcher>` (always visible)
+- Props: `heroInView: boolean`, `locale`, `setLocale`
 
 ### `components/Hero.tsx`
 ```typescript
@@ -510,6 +530,9 @@ Test runner: `bun test` (built-in Bun test runner).
   - Strips `_id` and `__v` from each entry
   - Flattens `description` to the requested locale
 - **`lib/db.test.ts`** — Verify connection helper exports expected interface
+- **`lib/middleware.test.ts`** — `requireDb` middleware:
+  - Returns 503 when `readyState !== 1`
+  - Calls `next()` when `readyState === 1`
 
 Use `mock()` from `bun:test` to stub Mongoose model methods — no real DB calls in unit tests.
 
@@ -517,8 +540,7 @@ Use `mock()` from `bun:test` to stub Mongoose model methods — no real DB calls
 
 - **`App.test.tsx`** — Render with mocked `fetch`:
   - Shows loading state initially
-  - Renders `Hero`, `Links`, `Skills` on successful fetch
-  - Shows error message on failed fetch
+  - Fetch failure shows fallback profile (name + links) — not an error message
 - **`components/Links.test.tsx`** — Only renders links that have values
 - **`components/Skills.test.tsx`** — Renders one tag per skill
 - **`components/ProjectCard.test.tsx`**:
@@ -527,10 +549,13 @@ Use `mock()` from `bun:test` to stub Mongoose model methods — no real DB calls
   - Renders live URL only when `liveUrl` present
   - Renders screenshot only when `screenshotUrl` present
   - Renders status badge only when `status` present
+- **`pages/AboutPage.test.tsx`** — Render with mocked `fetch`:
+  - Renders summary, skills, experience, education on successful fetch
+  - Shows fallback experience and education on fetch failure; summary and skills hidden
 - **`pages/ProjectsPage.test.tsx`** — Render with mocked `fetch`:
   - Shows loading state initially
   - Renders one `ProjectCard` per project on success
-  - Shows error message on failed fetch
+  - Shows fallback project card on failed fetch (not an error message)
 
 Use `@testing-library/react` + `happy-dom` (Bun-compatible).
 
@@ -611,18 +636,30 @@ This applies to `seed.ts` and to any direct MongoDB operation. When a structural
 - Path-filtered triggers; `workflow_dispatch` for manual runs
 - CI status badge in README
 
-### Planned — v0.6
+### Completed — v0.6
 - Projects page (`/projects`) with `ProjectCard` list
 - `GET /api/projects` endpoint + `Project` Mongoose model
-- React Router v6 — `/` and `/projects` routes
-- `StickyHeader` updated with "Projects" nav link
+- React Router v6 — `/`, `/about`, `/projects` routes
+- `StickyHeader` with Home/About/Projects nav links
 - Seed entry: this website as first project
 - Full EN/DE localisation for `description` field
 
+### Completed — v0.7
+- Site restructure: landing page simplified to Hero + Links; CV content moved to `/about`
+- `StickyHeader` rework: always visible, avatar fades in on scroll, positioned between sidebars
+- Sidebars: `w-[3%]` always visible (was fixed 33px, mobile-hidden)
+- Fallback content on all pages for GitHub Pages (no backend)
+- GitHub Pages CI deploy job; Vite `VITE_BASE` env var; `BrowserRouter` basename
+- Server starts without MongoDB; `requireDb` middleware returns 503 immediately
+- Dynamic `BASE_URL` for avatar and font assets
+- 72 client tests, 31 server tests
+
 ### Future Phases
-- Interactive API explorer on the site
-- Agentic build story / dev log page
-- Admin panel for editing profile
-- Authentication
+- Contact form with email delivery and rate limiting
+- Project detail page (`/projects/:slug`)
+- Dark mode
+- Admin panel for editing profile/projects without touching `seed.ts`
 - Analytics / visitor tracking
-- Dark/light mode toggle
+- SEO — meta tags, Open Graph, sitemap
+- Error monitoring (Sentry)
+- Lighthouse audit — performance/accessibility score
