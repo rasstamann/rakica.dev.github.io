@@ -21,7 +21,7 @@ export default function App() {
   const [heroInView, setHeroInView] = useState(true);
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <div className="fixed top-0 left-0 h-full w-[33px] bg-gradient-to-r from-green-600/50 to-stone-50 hidden sm:block" aria-hidden="true" />
       <div className="fixed top-0 right-0 h-full w-[33px] bg-gradient-to-l from-violet-600/50 to-stone-50 hidden sm:block" aria-hidden="true" />
       <div className={`fixed top-4 right-10 z-10 transition-opacity duration-200 ${heroInView ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
