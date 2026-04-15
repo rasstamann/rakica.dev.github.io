@@ -63,42 +63,11 @@ describe('App', () => {
     });
   });
 
-  it('renders summary after successful fetch', async () => {
-    render(<App />);
-    await waitFor(() => {
-      expect(screen.getByText('Test summary text.')).toBeInTheDocument();
-    });
-  });
-
   it('renders social links after successful fetch', async () => {
     render(<App />);
     await waitFor(() => {
       expect(screen.getByRole('link', { name: /github/i })).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /email/i })).toBeInTheDocument();
-    });
-  });
-
-  it('renders skills after successful fetch', async () => {
-    render(<App />);
-    await waitFor(() => {
-      expect(screen.getByText('TypeScript')).toBeInTheDocument();
-      expect(screen.getByText('React')).toBeInTheDocument();
-    });
-  });
-
-  it('renders experience after successful fetch', async () => {
-    render(<App />);
-    await waitFor(() => {
-      expect(screen.getByText('Test Corp')).toBeInTheDocument();
-      expect(screen.getByText('Engineer')).toBeInTheDocument();
-    });
-  });
-
-  it('renders education after successful fetch', async () => {
-    render(<App />);
-    await waitFor(() => {
-      expect(screen.getByText('Test University')).toBeInTheDocument();
-      expect(screen.getByText('BSc Computer Science')).toBeInTheDocument();
     });
   });
 

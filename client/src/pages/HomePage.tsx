@@ -1,11 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Profile, SupportedLocale } from '../types';
 import { Hero } from '../components/Hero';
-import { Summary } from '../components/Summary';
 import { Links } from '../components/Links';
-import { Skills } from '../components/Skills';
-import { Experience } from '../components/Experience';
-import { Education } from '../components/Education';
 
 const FALLBACK_TAGLINES: Record<string, string> = {
   en: 'Engineer, C++ developer, Lego enjoyer, cook, husband, dad and sometimes asleep',
@@ -81,14 +77,9 @@ export function HomePage({ locale, onHeroVisibilityChange }: Props) {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
-
       <div className="w-full max-w-xl space-y-10">
         <Hero ref={heroRef} name={displayProfile.name} tagline={displayProfile.tagline} />
-        {profile && <Summary summary={profile.summary} />}
         <Links links={displayProfile.links} />
-        <Skills skills={displayProfile.skills} />
-        <Experience experience={displayProfile.experience} locale={locale} />
-        <Education education={displayProfile.education} locale={locale} />
       </div>
     </main>
   );

@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import mongoose from 'mongoose';
 import { connectDb } from './lib/db';
 import meRouter from './routes/me';
 import projectsRouter from './routes/projects';
@@ -29,6 +30,16 @@ app.use(
   }),
 );
 
+export function requireDb(_req: Request, res: Response, next: NextFunction): void {
+  if (mongoose.connection.readyState !== 1) {
+    res.status(503).json({ error: 'Database unavailable' });
+    return;
+  }
+  next();
+}
+
+app.use('/api', requireDb);
+
 app.use('/api/me', meRouter);
 app.use('/api/projects', projectsRouter);
 
@@ -38,13 +49,11 @@ app.use((_err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-connectDb()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  })
-  .catch((err: unknown) => {
-    console.error('Failed to connect to MongoDB:', err);
-    process.exit(1);
-  });
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+connectDb().catch((err: unknown) => {
+  console.error('Failed to connect to MongoDB:', err);
+  console.warn('Server running without database — API routes will return 503 until DB is available');
+});
