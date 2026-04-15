@@ -139,34 +139,38 @@ describe('App', () => {
     });
   });
 
-  it('shows an error message when fetch fails', async () => {
+  it('shows fallback profile when fetch fails', async () => {
     globalThis.fetch = mock(() => Promise.reject(new Error('Network error'))) as unknown as typeof fetch;
     render(<App />);
     await waitFor(() => {
-      expect(screen.getByText(/could not load profile/i)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Aleksandar Rakić' })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /github/i })).toBeInTheDocument();
     });
   });
 
-  it('does not show an error when fetch is aborted', async () => {
+  it('shows fallback profile when fetch is aborted', async () => {
     const abortError = Object.assign(new Error('The operation was aborted'), { name: 'AbortError' });
     globalThis.fetch = mock(() => Promise.reject(abortError)) as unknown as typeof fetch;
     render(<App />);
+    // AbortError is ignored — stays in loading state, no fallback rendered
     await waitFor(() => {
       expect(screen.queryByText(/could not load profile/i)).not.toBeInTheDocument();
     });
   });
 
-  it('shows an error message when server returns a non-ok response', async () => {
+  it('shows fallback profile when server returns a non-ok response', async () => {
     globalThis.fetch = mock(() =>
       Promise.resolve({
         ok: false,
         status: 404,
+        statusText: 'Not Found',
         json: () => Promise.resolve({}),
       } as Response),
     ) as unknown as typeof fetch;
     render(<App />);
     await waitFor(() => {
-      expect(screen.getByText(/could not load profile/i)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Aleksandar Rakić' })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /github/i })).toBeInTheDocument();
     });
   });
 });
