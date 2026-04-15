@@ -85,11 +85,12 @@ describe('AboutPage', () => {
     });
   });
 
-  it('shows error when fetch fails', async () => {
+  it('shows fallback experience and education when fetch fails', async () => {
     globalThis.fetch = mock(() => Promise.reject(new Error('Network error'))) as unknown as typeof fetch;
     renderAboutPage();
     await waitFor(() => {
-      expect(screen.getByText(/could not load profile/i)).toBeInTheDocument();
+      expect(screen.getByText('grapho-metronic gmbh')).toBeInTheDocument();
+      expect(screen.getByText('School of Electrical Engineering, University of Belgrade')).toBeInTheDocument();
     });
   });
 });

@@ -59,7 +59,7 @@ describe('ProjectsPage', () => {
     });
   });
 
-  it('shows error message on failed fetch', async () => {
+  it('shows fallback project on failed fetch', async () => {
     globalThis.fetch = mock(() =>
       Promise.resolve({
         ok: false,
@@ -69,7 +69,21 @@ describe('ProjectsPage', () => {
 
     render(<ProjectsPage locale="en" />);
     await waitFor(() => {
-      expect(screen.getByText('Could not load projects')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Personal Presentation Website' })).toBeInTheDocument();
+    });
+  });
+
+  it('shows fallback project in German when locale is de', async () => {
+    globalThis.fetch = mock(() =>
+      Promise.resolve({
+        ok: false,
+        statusText: 'Internal Server Error',
+      } as Response),
+    ) as unknown as typeof fetch;
+
+    render(<ProjectsPage locale="de" />);
+    await waitFor(() => {
+      expect(screen.getByText(/Full-Stack-Portfolio/)).toBeInTheDocument();
     });
   });
 });
