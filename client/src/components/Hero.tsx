@@ -9,7 +9,7 @@ export const Hero = forwardRef<HTMLDivElement, HeroProps>(({ name, tagline }, re
   return (
     <div ref={ref} className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-6">
       <img
-        src="/avatar.png"
+        src={`${import.meta.env.BASE_URL}avatar.png`}
         alt={name}
         loading="eager"
         className="h-20 w-20 rounded-full object-cover object-top shrink-0 ring-2 ring-stone-200 bg-stone-200"

@@ -22,7 +22,7 @@ export function StickyHeader({ visible, locale, setLocale }: Props) {
         {/* Identity — links back to home */}
         <Link to="/" className="flex items-center gap-3 group">
           <img
-            src="/avatar.png"
+            src={`${import.meta.env.BASE_URL}avatar.png`}
             alt="Home"
             className="h-8 w-8 rounded-full object-cover object-top ring-1 ring-stone-200 bg-stone-200"
             onError={(e) => {

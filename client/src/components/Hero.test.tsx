@@ -18,6 +18,6 @@ describe('Hero', () => {
     render(<Hero name="Aleksandar Rakić" tagline="C++ developer" />);
     const img = screen.getByRole('img', { name: 'Aleksandar Rakić' });
     expect(img).toBeInTheDocument();
-    expect(img).toHaveAttribute('src', '/avatar.png');
+    expect(img).toHaveAttribute('src', `${import.meta.env.BASE_URL}avatar.png`);
   });
 });
