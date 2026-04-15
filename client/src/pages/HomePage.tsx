@@ -7,6 +7,17 @@ import { Skills } from '../components/Skills';
 import { Experience } from '../components/Experience';
 import { Education } from '../components/Education';
 
+const FALLBACK_TAGLINES: Record<string, string> = {
+  en: 'Engineer, C++ developer, Lego enjoyer, cook, husband, dad and sometimes asleep',
+  de: 'Ingenieur, C++ Entwickler, Lego-Enthusiast, Koch, Ehemann, Papa und manchmal am Schlafen',
+};
+
+const FALLBACK_LINKS = {
+  github: 'https://github.com/rasstamann',
+  linkedin: 'https://www.linkedin.com/in/aleksandarrakic88/',
+  email: 'aleksandar.rakic.88@gmail.com',
+};
+
 type Props = {
   locale: SupportedLocale;
   onHeroVisibilityChange: (inView: boolean) => void;
@@ -15,13 +26,11 @@ type Props = {
 export function HomePage({ locale, onHeroVisibilityChange }: Props) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
-    setError(null);
 
     fetch(`/api/me?lang=${locale}`, { signal: controller.signal })
       .then((res) => {
@@ -35,7 +44,6 @@ export function HomePage({ locale, onHeroVisibilityChange }: Props) {
       .catch((err: unknown) => {
         if (err instanceof Error && err.name === 'AbortError') return;
         console.error('Failed to load profile:', err);
-        setError('Could not load profile');
         setLoading(false);
       });
 
@@ -61,31 +69,26 @@ export function HomePage({ locale, onHeroVisibilityChange }: Props) {
     );
   }
 
-  if (error) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-red-400 text-sm">{error}</p>
-      </div>
-    );
-  }
-
-  if (!profile) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-neutral-500 text-sm">No profile data available.</p>
-      </div>
-    );
-  }
+  const displayProfile: Profile = profile ?? {
+    name: 'Aleksandar Rakić',
+    tagline: FALLBACK_TAGLINES[locale] ?? FALLBACK_TAGLINES.en,
+    summary: '',
+    links: FALLBACK_LINKS,
+    skills: [],
+    experience: [],
+    education: [],
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
+
       <div className="w-full max-w-xl space-y-10">
-        <Hero ref={heroRef} name={profile.name} tagline={profile.tagline} />
-        <Summary summary={profile.summary} />
-        <Links links={profile.links} />
-        <Skills skills={profile.skills} />
-        <Experience experience={profile.experience} locale={locale} />
-        <Education education={profile.education} locale={locale} />
+        <Hero ref={heroRef} name={displayProfile.name} tagline={displayProfile.tagline} />
+        {profile && <Summary summary={profile.summary} />}
+        <Links links={displayProfile.links} />
+        <Skills skills={displayProfile.skills} />
+        <Experience experience={displayProfile.experience} locale={locale} />
+        <Education education={displayProfile.education} locale={locale} />
       </div>
     </main>
   );
