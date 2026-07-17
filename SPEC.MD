@@ -587,6 +587,15 @@ Local development runs MongoDB in Docker. Docker Desktop must be running first.
 
 If `GET /api/me` or `GET /api/projects` returns `503`, the DB is unreachable — check the container is running before checking anything else.
 
+### Production Topology
+
+- **Host:** Hetzner VPS. Nginx (`deploy/nginx.conf`) terminates TLS and serves the client static build (`client/dist`) directly; reverse-proxies `/api/*` to the Express server on `127.0.0.1:3001`.
+- **TLS:** Certbot-issued certificate for `rakica.dev`. HTTP redirects to HTTPS.
+- **Process manager:** PM2, config in `ecosystem.config.cjs` (repo root). Runs the server via Bun (`/home/deployer/.bun/bin/bun`) from `/var/www/personal_presentation/server`, single fork instance, `max_memory_restart: 256M`.
+- **Database:** MongoDB Atlas (remote managed cluster) — production is not a self-hosted `mongod`. Network Access allowlist is scoped to a narrow IP range including the Hetzner box, not open (`0.0.0.0/0`). `MONGODB_URI` in production `server/.env` points to the Atlas connection string.
+- **Deploy path:** GitHub Actions `deploy` job (`.github/workflows/ci.yml`) SSHes into the Hetzner box as the `deployer` user, using a dedicated deploy-only SSH key (`DEPLOY_SSH_KEY` secret — not reused for any other access).
+- **Static fallback:** GitHub Pages hosts a separate static-only build (no backend) via a second CI deploy job — see v0.7 in §14 Roadmap.
+
 ---
 
 ## 13. Boundaries (Requires Explicit Approval)
