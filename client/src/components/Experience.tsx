@@ -27,15 +27,6 @@ export function Experience({ experience, locale }: ExperienceProps) {
               </div>
               <DateRange startDate={entry.startDate} endDate={entry.endDate} locale={locale} />
             </div>
-            {entry.bullets.length > 0 && (
-              <ul className="mt-1 space-y-1 pl-4">
-                {entry.bullets.map((bullet, j) => (
-                  <li key={j} className="text-sm text-neutral-600 leading-snug list-disc">
-                    {bullet}
-                  </li>
-                ))}
-              </ul>
-            )}
           </li>
         ))}
       </ol>

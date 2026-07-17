@@ -40,10 +40,10 @@ describe('Experience', () => {
     expect(screen.getByText('Junior Developer')).toBeInTheDocument();
   });
 
-  it('renders bullet points', () => {
+  it('does not render bullet points', () => {
     render(<Experience experience={mockExperience} locale="en" />);
-    expect(screen.getByText('Built things')).toBeInTheDocument();
-    expect(screen.getByText('Fixed bugs')).toBeInTheDocument();
+    expect(screen.queryByText('Built things')).toBeNull();
+    expect(screen.queryByText('Fixed bugs')).toBeNull();
   });
 
   it('shows "Present" for entries with null endDate in English', () => {
@@ -63,10 +63,10 @@ describe('Experience', () => {
     expect(screen.getByText('Berufserfahrung')).toBeInTheDocument();
   });
 
-  it('renders entries with no bullets without crashing', () => {
-    const { container } = render(<Experience experience={[mockExperience[1]]} locale="en" />);
-    expect(screen.getByText('Old Job')).toBeInTheDocument();
-    // No bullet <ul> rendered when bullets array is empty
+  it('renders entries with bullets present in data without crashing or showing them', () => {
+    const { container } = render(<Experience experience={[mockExperience[0]]} locale="en" />);
+    expect(screen.getByText('Acme Corp')).toBeInTheDocument();
+    // Bullets are never rendered, regardless of data
     expect(container.querySelector('ul')).toBeNull();
   });
 });

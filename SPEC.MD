@@ -577,6 +577,16 @@ Use `@testing-library/react` + `happy-dom` (Bun-compatible).
 | `PORT` | `3001` | Express server port |
 | `ALLOWED_ORIGIN` | `http://localhost:5173` | CORS allowed origin |
 
+### Local MongoDB (Docker)
+
+Local development runs MongoDB in Docker. Docker Desktop must be running first.
+
+- Start existing container: `docker start mongo-dev`
+- Recreate if it doesn't exist: `docker run -d --name mongo-dev -p 27017:27017 mongo:8`
+- Container: `mongo-dev`, image `mongo:8`, port `27017:27017`
+
+If `GET /api/me` or `GET /api/projects` returns `503`, the DB is unreachable — check the container is running before checking anything else.
+
 ---
 
 ## 13. Boundaries (Requires Explicit Approval)

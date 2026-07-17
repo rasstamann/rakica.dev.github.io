@@ -33,7 +33,7 @@ const seedData = {
       company: 'grapho-metronic gmbh',
       role: { en: 'Software Engineer', de: 'Software Engineer' },
       startDate: '2023-01',
-      endDate: null,
+      endDate: '2026-02',
       bullets: [
         {
           en: 'Contributed to several C++/Qt projects in the field of inline image processing using embedded Linux and industrial PCs',
