@@ -150,10 +150,7 @@ Returns the singleton profile document from MongoDB, with translatable fields fl
       "company": "grapho-metronic gmbh",
       "role": "Software Engineer",
       "startDate": "2023-01",
-      "endDate": null,
-      "bullets": [
-        "Contributed to several C++/Qt projects in the field of inline image processing..."
-      ]
+      "endDate": null
     }
   ],
   "education": [
@@ -200,7 +197,7 @@ Navigation between `/` and `/projects` via sticky header links (existing `Sticky
 Displays CV content:
 1. Summary / "About me" paragraph
 2. Skills — grouped by category
-3. Experience — timeline with bullets
+3. Experience — timeline (company, role, dates)
 4. Education — degrees and courses
 
 Fetched from `GET /api/me?lang=<locale>`. On failure, shows hardcoded fallback: current job (grapho-metronic) and BSc (University of Belgrade) only. Summary and skills are hidden when falling back.
@@ -262,7 +259,6 @@ type ExperienceEntry = {
   role: LocaleString;
   startDate: string;      // "YYYY-MM"
   endDate: string | null; // null = present
-  bullets: LocaleString[];
 };
 
 type EducationEntry = {
@@ -463,7 +459,6 @@ export type ExperienceEntry = {
   role: string;
   startDate: string;
   endDate: string | null;
-  bullets: string[];
 };
 
 export type EducationEntry = {
@@ -623,7 +618,6 @@ The database is the source of truth for profile content. The following fields ar
 | `tagline` (en + de) | |
 | `summary` (en + de) | |
 | `experience[].role` (en + de) | |
-| `experience[].bullets[]` (en + de) | |
 | `education[].degree` (en + de) | |
 | `education[].field` (en + de) | |
 | `links` | github, linkedin, email |

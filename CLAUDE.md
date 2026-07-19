@@ -78,7 +78,7 @@ The following fields in `seed.ts` and in the MongoDB `profiles` collection are p
 
 - `tagline` (en + de)
 - `summary` (en + de)
-- `experience[].role`, `experience[].bullets` (en + de)
+- `experience[].role` (en + de)
 - `education[].degree`, `education[].field` (en + de)
 - `name`, `links`, `skills`
 

@@ -14,9 +14,6 @@ const mockProfileData = {
       role: { en: 'Software Engineer', de: 'Software-Ingenieur' },
       startDate: '2023-01',
       endDate: null,
-      bullets: [
-        { en: 'Did EN things', de: 'Hat DE Dinge gemacht' },
-      ],
     },
   ],
   education: [
@@ -91,7 +88,6 @@ describe('flattenProfile', () => {
     expect(result.tagline).toBe('EN tagline');
     expect(result.summary).toBe('EN summary');
     expect(result.experience[0].role).toBe('Software Engineer');
-    expect(result.experience[0].bullets[0]).toBe('Did EN things');
     expect(result.education[0].degree).toBe('BSc Computer Science');
     expect(result.education[0].field).toBe('Computer Science');
   });
@@ -101,7 +97,6 @@ describe('flattenProfile', () => {
     expect(result.tagline).toBe('DE Tagline');
     expect(result.summary).toBe('DE Zusammenfassung');
     expect(result.experience[0].role).toBe('Software-Ingenieur');
-    expect(result.experience[0].bullets[0]).toBe('Hat DE Dinge gemacht');
     expect(result.education[0].degree).toBe('B.Sc. Informatik');
     expect(result.education[0].field).toBe('Informatik');
   });

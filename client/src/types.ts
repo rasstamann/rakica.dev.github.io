@@ -11,7 +11,6 @@ export type ExperienceEntry = {
   role: string;
   startDate: string;
   endDate: string | null;
-  bullets: string[];
 };
 
 export type EducationEntry = {

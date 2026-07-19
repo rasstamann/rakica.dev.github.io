@@ -10,14 +10,12 @@ const mockExperience: ExperienceEntry[] = [
     role: 'Software Engineer',
     startDate: '2023-01',
     endDate: null,
-    bullets: ['Built things', 'Fixed bugs'],
   },
   {
     company: 'Old Job',
     role: 'Junior Developer',
     startDate: '2020-06',
     endDate: '2022-12',
-    bullets: [],
   },
 ];
 
@@ -40,12 +38,6 @@ describe('Experience', () => {
     expect(screen.getByText('Junior Developer')).toBeInTheDocument();
   });
 
-  it('does not render bullet points', () => {
-    render(<Experience experience={mockExperience} locale="en" />);
-    expect(screen.queryByText('Built things')).toBeNull();
-    expect(screen.queryByText('Fixed bugs')).toBeNull();
-  });
-
   it('shows "Present" for entries with null endDate in English', () => {
     render(<Experience experience={mockExperience} locale="en" />);
     expect(screen.getByText(/present/i)).toBeInTheDocument();
@@ -61,12 +53,5 @@ describe('Experience', () => {
   it('renders German heading when locale is de', () => {
     render(<Experience experience={mockExperience} locale="de" />);
     expect(screen.getByText('Berufserfahrung')).toBeInTheDocument();
-  });
-
-  it('renders entries with bullets present in data without crashing or showing them', () => {
-    const { container } = render(<Experience experience={[mockExperience[0]]} locale="en" />);
-    expect(screen.getByText('Acme Corp')).toBeInTheDocument();
-    // Bullets are never rendered, regardless of data
-    expect(container.querySelector('ul')).toBeNull();
   });
 });

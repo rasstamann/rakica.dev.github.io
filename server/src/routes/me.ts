@@ -20,7 +20,6 @@ export function flattenProfile(profile: IProfile, locale: SupportedLocale) {
       role: ls(e.role, locale),
       startDate: e.startDate,
       endDate: e.endDate,
-      bullets: e.bullets.map((b) => ls(b, locale)),
     })),
     education: profile.education.map((e) => ({
       institution: e.institution,

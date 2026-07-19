@@ -10,7 +10,6 @@ export interface IExperienceEntry {
   role: ILocaleString;
   startDate: string;
   endDate: string | null;
-  bullets: ILocaleString[];
 }
 
 export interface IEducationEntry {
@@ -49,7 +48,6 @@ const experienceSchema = new Schema<IExperienceEntry>(
     role: { type: localeStringSchema, required: true },
     startDate: { type: String, required: true, maxlength: 7 },
     endDate: { type: String, default: null, maxlength: 7 },
-    bullets: [{ type: localeStringSchema }],
   },
   { _id: false },
 );

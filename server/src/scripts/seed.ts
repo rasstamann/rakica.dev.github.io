@@ -34,92 +34,30 @@ const seedData = {
       role: { en: 'Software Engineer', de: 'Software Engineer' },
       startDate: '2023-01',
       endDate: '2026-02',
-      bullets: [
-        {
-          en: 'Contributed to several C++/Qt projects in the field of inline image processing using embedded Linux and industrial PCs',
-          de: 'Mitarbeit an mehreren C++/Qt Projekten im Bereich der Inline-Bildverarbeitung mit embedded Linux und industriellen PCs',
-        },
-        {
-          en: 'Implemented multithreaded real-time components for controlling stepper motors and Basler camera systems',
-          de: 'Implementierung von multithreadfähigen Echtzeitkomponenten für die Steuerung von Schrittmotoren und Basler-Kamerasystemen',
-        },
-        {
-          en: 'Developed new algorithms for color stripe detection in the printing process and distance measurement in the micrometer range',
-          de: 'Entwicklung neuer Algorithmen, unter anderem zur Farbstreifenerkennung im Druckprozess und zur Abstandsmessung im Mikrometerbereich',
-        },
-        {
-          en: 'Established the foundations for company-wide coding guidelines in C++',
-          de: 'Die Grundlagen für unternehmensweite Coding-Richtlinien in C++ geschaffen',
-        },
-      ],
     },
     {
       company: '—',
       role: { en: 'Relocation to Germany', de: 'Umzug nach Deutschland' },
       startDate: '2021-04',
       endDate: '2023-01',
-      bullets: [
-        {
-          en: "Relocated to Germany; focused on family, language acquisition, and completing my Bachelor's thesis",
-          de: 'Umzug nach Deutschland; Fokus auf Familie, Spracherwerb und Abschluss der Bachelorarbeit',
-        },
-        {
-          en: 'Supplementary part-time work in retail (2022)',
-          de: 'Ergänzende Teilzeittätigkeit im Einzelhandel (2022)',
-        },
-      ],
     },
     {
       company: 'ZR VesnaR',
       role: { en: 'Assistant to Bakery Owner', de: 'Assistent der Bäckereibesitzerin' },
       startDate: '2009-11',
       endDate: '2021-04',
-      bullets: [
-        {
-          en: 'Managed a family business with 10 employees',
-          de: 'Leitung eines Familienunternehmens mit 10 Mitarbeitern',
-        },
-        {
-          en: 'Handled direct sales to customers and took custom orders for catering',
-          de: 'Direktverkauf an Kunden abgewickelt und Sonderbestellungen für das Catering entgegengenommen',
-        },
-        {
-          en: 'Shared responsibility for finances, procurement, delivery, and basic administrative tasks',
-          de: 'Gemeinsam verantwortlich für Finanzen, Beschaffung, Lieferung und grundlegende Verwaltungsaufgaben',
-        },
-      ],
     },
     {
       company: 'application software partner',
       role: { en: 'Software Developer', de: 'Software Developer' },
       startDate: '2018-09',
       endDate: '2019-05',
-      bullets: [
-        {
-          en: 'Contributed to four independent projects as extensions of an existing insurance management system',
-          de: 'Mitarbeit an vier eigenständigen Projekten als Erweiterungen eines bestehenden Versicherungsverwaltungssystems',
-        },
-        {
-          en: 'Worked primarily in C# and MSSQL across four independent module projects',
-          de: 'Die Arbeit erfolgte hauptsächlich mit C# und MSSQL im Rahmen von vier eigenständigen Modulprojekten',
-        },
-      ],
     },
     {
       company: 'CITI d.o.o.',
       role: { en: 'Junior Embedded Software Developer', de: 'Junior Embedded Software Developer' },
       startDate: '2016-10',
       endDate: '2017-05',
-      bullets: [
-        {
-          en: 'Contributed to projects for the development and implementation of embedded systems on STMicroelectronics ARM processors',
-          de: 'Mitarbeit an Projekten zur Entwicklung und Implementierung von Embedded-Systemen auf ARM-Prozessoren von STMicroelectronics',
-        },
-        {
-          en: 'Created user interfaces in Java and C++ and defined communication protocols between ARM devices and PC applications',
-          de: 'Erstellung von Benutzeroberflächen in Java und C++ sowie Definition von Kommunikationsprotokollen zwischen ARM-Geräten und PC-Anwendungen',
-        },
-      ],
     },
   ],
   education: [

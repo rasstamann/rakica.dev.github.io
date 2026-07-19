@@ -15,7 +15,6 @@ const mockProfile = {
       role: 'Engineer',
       startDate: '2022-01',
       endDate: null,
-      bullets: ['Did things'],
     },
   ],
   education: [

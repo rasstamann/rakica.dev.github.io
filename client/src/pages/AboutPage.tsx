@@ -11,24 +11,12 @@ const FALLBACK_EXPERIENCE: Record<string, ExperienceEntry[]> = {
     role: 'Software Engineer',
     startDate: '2023-01',
     endDate: null,
-    bullets: [
-      'Contributed to several C++/Qt projects in the field of inline image processing using embedded Linux and industrial PCs',
-      'Implemented multithreaded real-time components for controlling stepper motors and Basler camera systems',
-      'Developed new algorithms for color stripe detection in the printing process and distance measurement in the micrometer range',
-      'Established the foundations for company-wide coding guidelines in C++',
-    ],
   }],
   de: [{
     company: 'grapho-metronic gmbh',
     role: 'Software Engineer',
     startDate: '2023-01',
     endDate: null,
-    bullets: [
-      'Mitarbeit an mehreren C++/Qt Projekten im Bereich der Inline-Bildverarbeitung mit embedded Linux und industriellen PCs',
-      'Implementierung von multithreadfähigen Echtzeitkomponenten für die Steuerung von Schrittmotoren und Basler-Kamerasystemen',
-      'Entwicklung neuer Algorithmen, unter anderem zur Farbstreifenerkennung im Druckprozess und zur Abstandsmessung im Mikrometerbereich',
-      'Die Grundlagen für unternehmensweite Coding-Richtlinien in C++ geschaffen',
-    ],
   }],
 };
 
