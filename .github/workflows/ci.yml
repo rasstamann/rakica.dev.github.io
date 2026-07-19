@@ -127,9 +127,13 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
-            set -e
+            set -euo pipefail
+            export PATH="$HOME/.bun/bin:$PATH"
+
             cd /var/www/personal_presentation
             git pull origin main
-            cd client && bun install --frozen-lockfile && bun run build && cd ..
-            cd server && bun install --frozen-lockfile && bun run seed && cd ..
+
+            (cd client && bun install --frozen-lockfile && bun run build)
+            (cd server && bun install --frozen-lockfile && bun run seed)
+
             pm2 restart personal-presentation
