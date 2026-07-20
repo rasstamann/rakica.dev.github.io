@@ -48,6 +48,11 @@ describe('contactSchema', () => {
     expect(contactSchema.safeParse({ ...validBody, message: '' }).success).toBe(false);
   });
 
+  it('rejects an email longer than 254 characters', () => {
+    const longEmail = `${'a'.repeat(250)}@example.com`;
+    expect(contactSchema.safeParse({ ...validBody, senderEmail: longEmail }).success).toBe(false);
+  });
+
   it('rejects a missing subject', () => {
     const rest = { senderEmail: validBody.senderEmail, message: validBody.message };
     expect(contactSchema.safeParse(rest).success).toBe(false);

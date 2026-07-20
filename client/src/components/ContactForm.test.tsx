@@ -63,4 +63,32 @@ describe('ContactForm', () => {
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
     });
   });
+
+  it('shows a rate-limit message on a 429 response', async () => {
+    globalThis.fetch = mock(() =>
+      Promise.resolve({ ok: false, status: 429 } as Response),
+    ) as unknown as typeof fetch;
+
+    render(<ContactForm />);
+    fillAndSubmit();
+
+    await waitFor(() => {
+      expect(screen.getByText(/too many requests/i)).toBeInTheDocument();
+    });
+  });
+
+  it('lets the user send another message after success', async () => {
+    globalThis.fetch = mock(() =>
+      Promise.resolve({ ok: true } as Response),
+    ) as unknown as typeof fetch;
+
+    render(<ContactForm />);
+    fillAndSubmit();
+
+    await waitFor(() => expect(screen.getByText(/message sent/i)).toBeInTheDocument());
+
+    fireEvent.click(screen.getByRole('button', { name: /send another/i }));
+
+    expect(screen.getByLabelText('Your email')).toBeInTheDocument();
+  });
 });

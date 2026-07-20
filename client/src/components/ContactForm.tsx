@@ -8,6 +8,7 @@ export function ContactForm() {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState<Status>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -20,7 +21,14 @@ export function ContactForm() {
         body: JSON.stringify({ senderEmail, subject, message }),
       });
 
-      if (!res.ok) throw new Error(res.statusText || 'Request failed');
+      if (!res.ok) {
+        if (res.status === 429) {
+          setErrorMsg('Too many requests. Please try again later.');
+          setStatus('error');
+          return;
+        }
+        throw new Error(res.statusText || 'Request failed');
+      }
 
       setStatus('success');
       setSenderEmail('');
@@ -28,12 +36,24 @@ export function ContactForm() {
       setMessage('');
     } catch (err: unknown) {
       console.error('Failed to send contact message:', err);
+      setErrorMsg('Something went wrong. Please try again.');
       setStatus('error');
     }
   }
 
   if (status === 'success') {
-    return <p className="text-sm text-stone-600">Message sent. Thanks for reaching out.</p>;
+    return (
+      <div className="space-y-4">
+        <p className="text-sm text-stone-600">Message sent. Thanks for reaching out.</p>
+        <button
+          type="button"
+          onClick={() => setStatus('idle')}
+          className="text-sm font-medium text-[#16a34a] hover:text-[#15803d]"
+        >
+          Send another
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -82,9 +102,7 @@ export function ContactForm() {
         />
       </div>
 
-      {status === 'error' && (
-        <p className="text-sm text-red-600">Something went wrong. Please try again.</p>
-      )}
+      {status === 'error' && <p className="text-sm text-red-600">{errorMsg}</p>}
 
       <button
         type="submit"
