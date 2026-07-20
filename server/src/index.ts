@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 import { connectDb } from './lib/db';
 import meRouter from './routes/me';
 import projectsRouter from './routes/projects';
+import contactRouter from './routes/contact';
 
 const app = express();
 const rawPort = process.env.PORT ?? '3001';
@@ -37,6 +38,10 @@ export function requireDb(_req: Request, res: Response, next: NextFunction): voi
   }
   next();
 }
+
+// Mounted before requireDb: the contact form only needs the mailer, not MongoDB,
+// so it keeps working even when the DB is unreachable.
+app.use('/api/contact', contactRouter);
 
 app.use('/api', requireDb);
 

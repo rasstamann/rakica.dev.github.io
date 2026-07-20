@@ -346,6 +346,7 @@ type IProject = {
 |--------|------|------|-------------|
 | GET | `/api/me` | None | Returns profile document. Accepts `?lang=en\|de` (default: `en`). |
 | GET | `/api/projects` | None | Returns array of project documents. Accepts `?lang=en\|de` (default: `en`). |
+| POST | `/api/contact` | None (rate limited) | Sends a contact message via email. Not gated by `requireDb` — works even when MongoDB is unavailable. |
 
 #### `GET /api/projects`
 
@@ -367,6 +368,47 @@ Returns all project documents sorted by `order` ascending, with `LocaleString` f
 ```
 
 Optional fields (`liveUrl`, `screenshotUrl`) are omitted when not set.
+
+#### `POST /api/contact`
+
+Sends a message from the contact form to the site owner via email (Resend). No data is persisted to MongoDB — this is a pure send-only endpoint, and it is mounted before the `requireDb` gate so it keeps working even if the database is unreachable.
+
+**Request body:**
+```json
+{
+  "senderEmail": "visitor@example.com",
+  "subject": "Let's talk",
+  "message": "Hi, I'd like to discuss an opportunity..."
+}
+```
+
+| Field | Type | Constraints |
+|-------|------|-------------|
+| `senderEmail` | string | required, valid email |
+| `subject` | string | required, 1–200 characters |
+| `message` | string | required, 1–5000 characters |
+
+The outgoing email's `From` address is always a fixed, verified sender (`CONTACT_FROM_EMAIL`); `senderEmail` is used only as the `Reply-To` address, never as `From`, to prevent header injection/spoofing.
+
+**Response 200:**
+```json
+{ "success": true }
+```
+
+**Response 400** (validation failure):
+```json
+{ "error": "Invalid request" }
+```
+
+**Response 429** (rate limited — 5 requests per hour per client, stricter than the app-wide limiter):
+```json
+{ "error": "Too many requests. Please try again later." }
+```
+
+**Response 500** (email delivery failed):
+```json
+{ "error": "Internal server error" }
+```
 
 ### Headers
 
@@ -571,6 +613,9 @@ Use `@testing-library/react` + `happy-dom` (Bun-compatible).
 | `MONGODB_URI` | `mongodb://localhost:27017/personal_presentation` | MongoDB connection string |
 | `PORT` | `3001` | Express server port |
 | `ALLOWED_ORIGIN` | `http://localhost:5173` | CORS allowed origin |
+| `RESEND_API_KEY` | — | Resend API key, used by `POST /api/contact` |
+| `CONTACT_FROM_EMAIL` | `noreply@rakica.dev` | Fixed, verified `From` address for contact-form emails |
+| `CONTACT_TO_EMAIL` | `rakica@rakica.dev` | Address contact-form emails are sent to |
 
 ### Local MongoDB (Docker)
 
@@ -667,8 +712,12 @@ This applies to `seed.ts` and to any direct MongoDB operation. When a structural
 - Dynamic `BASE_URL` for avatar and font assets
 - 72 client tests, 31 server tests
 
+### In Progress — Contact form
+- `POST /api/contact` — Resend email delivery, `zod` request validation, route-scoped rate limiter (5/hour) separate from the app-wide limiter, no MongoDB persistence
+- `ContactForm`/`ContactPage` components, `/contact` route, `StickyHeader` nav link
+- Blocked on production deploy: Cloudflare Email Routing (`rakica@rakica.dev` → Gmail) and Resend domain verification for `rakica.dev` — see `tasks/backlog.md` "Infra/DNS"
+
 ### Future Phases
-- Contact form with email delivery and rate limiting
 - Project detail page (`/projects/:slug`)
 - Dark mode
 - Admin panel for editing profile/projects without touching `seed.ts`

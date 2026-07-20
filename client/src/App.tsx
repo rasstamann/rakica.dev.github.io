@@ -5,6 +5,7 @@ import { StickyHeader } from './components/StickyHeader';
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
 import { ProjectsPage } from './pages/ProjectsPage';
+import { ContactPage } from './pages/ContactPage';
 
 function detectLocale(): SupportedLocale {
   const lang = navigator.language ?? '';
@@ -32,6 +33,7 @@ export default function App() {
         />
         <Route path="/about" element={<AboutPage locale={locale} />} />
         <Route path="/projects" element={<ProjectsPage locale={locale} />} />
+        <Route path="/contact" element={<ContactPage />} />
       </Routes>
     </BrowserRouter>
   );

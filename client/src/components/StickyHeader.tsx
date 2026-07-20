@@ -58,6 +58,14 @@ export function StickyHeader({ heroInView, locale, setLocale }: Props) {
             >
               Projects
             </Link>
+            <Link
+              to="/contact"
+              className={`text-xs font-medium transition-colors ${
+                pathname === '/contact' ? 'text-[#16a34a]' : 'text-stone-500 hover:text-[#16a34a]'
+              }`}
+            >
+              Contact
+            </Link>
           </nav>
         </div>
 
