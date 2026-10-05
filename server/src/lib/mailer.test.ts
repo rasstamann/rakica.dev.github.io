@@ -12,10 +12,24 @@ mock.module('resend', () => ({
   },
 }));
 
+// The mailer builds its Resend client lazily and memoises it. Start with no key so the
+// missing-key test below sees an unbuilt client; it is declared first for that reason.
+delete process.env.RESEND_API_KEY;
+
 const { sendContactEmail } = await import('./mailer');
+
+const input = { senderEmail: 'visitor@example.com', subject: 'Hello', message: 'Hi there' };
+
+describe('sendContactEmail without RESEND_API_KEY', () => {
+  it('rejects instead of throwing at import time', async () => {
+    await expect(sendContactEmail(input)).rejects.toThrow('RESEND_API_KEY is not set');
+    expect(sendSpy).not.toHaveBeenCalled();
+  });
+});
 
 describe('sendContactEmail', () => {
   beforeEach(() => {
+    process.env.RESEND_API_KEY = 'test-key';
     mockError = null;
     sendSpy.mockClear();
   });

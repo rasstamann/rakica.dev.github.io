@@ -3,8 +3,8 @@ import type { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import mongoose from 'mongoose';
 import { connectDb } from './lib/db';
+import { requireDb } from './lib/middleware';
 import meRouter from './routes/me';
 import projectsRouter from './routes/projects';
 import contactRouter from './routes/contact';
@@ -30,14 +30,6 @@ app.use(
     legacyHeaders: false,   // suppress X-RateLimit-* headers
   }),
 );
-
-export function requireDb(_req: Request, res: Response, next: NextFunction): void {
-  if (mongoose.connection.readyState !== 1) {
-    res.status(503).json({ error: 'Database unavailable' });
-    return;
-  }
-  next();
-}
 
 // Mounted before requireDb: the contact form only needs the mailer, not MongoDB,
 // so it keeps working even when the DB is unreachable.

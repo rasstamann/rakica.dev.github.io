@@ -11,7 +11,7 @@ mock.module('mongoose', () => ({
 
 // Must import after mock is set up
 const mongoose = (await import('mongoose')).default;
-const { requireDb } = await import('../index');
+const { requireDb } = await import('./middleware');
 
 function makeMockRes() {
   const res = {} as unknown as Response;
