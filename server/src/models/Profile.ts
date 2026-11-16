@@ -1,4 +1,6 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
+
+const { Schema, model } = mongoose;
 
 export interface ILocaleString {
   en: string;

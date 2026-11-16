@@ -1,6 +1,8 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 import type { ILocaleString } from './Profile';
 import { localeStringSchema } from './Profile';
+
+const { Schema, model } = mongoose;
 
 export interface IProject {
   slug: string;
